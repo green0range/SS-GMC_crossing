@@ -1,0 +1,150 @@
+Results are all folded in the data/ directory. Recall we ran
+four jobs which differed in the way (i) how fast planets
+migrated, and (ii) how we statistically treated stellar encounters.
+Overall, they provide equivalent results for our purposes.
+The properties of the early planet migrations are important 
+for some details of Kuiper belt orbital architecture, but
+quite less so for the Oort cloud structure. Also our stellar
+encounter models were similar enough that we did not see
+significant differences among the jobs. All this is just to 
+explain, that I always give four variants of results labeled with
+
+*_case?_ver?0
+
+notation. Case1 or case2 are the two variants of planet
+migration (case1 means slower migration and case2 faster 
+migration); ver10 and ver20 are the two variants of stellar
+encounter models. I'd suggest to use
+
+*_case1_ver10
+
+files at the moment (if you'd like to test robustness of the
+results, use also the other files).
+
+Next, I though it might be useful to provide data at few 
+different epochs. We ran our jobs for 4.5 Gyr and I give
+here planets + planetesimal/comet orbits at
+
+1.5 Gyr, 2.5 Gyr, 3.5 Gyr and 4.5 Gyr
+(after the origin of the Solar system).
+
+This does not include information about early stages of the
+Oort cloud filling -- the cloud is initially formed after
+~ 0.5 Gyr and since then slowly erodes by the mutual effects
+of galactic tides and stellar encounters. However, there
+are subtleties: for instance the inner Oort cloud fills the
+last and there are significant differences between 1.5 and
+4.5 Gyr epochs if you look at planetesimal orbits with
+semimajor axes between 2000-7000 au (say). This is because the
+inner cloud is (in our model, where we do not include
+effects of the solar birth cluster or possible strong radial
+outward migration in the Galaxy) build by galactic tides only,
+whose periods become very long at few thousand au helicentric
+distance.
+
+So the data/ directory is first brached into four subdirectories
+
+data_at_1.5Gy/
+data_at_2.5Gy/
+data_at_3.5Gy/
+data_at_4.5Gy/
+
+depending at what epoch of our simulations the data are provided.
+
+Each of them contains the following files
+
+ aeii.data_case1_ver10
+ aeii.data_case1_ver20
+ aeii.data_case2_ver10
+ aeii.data_case2_ver20
+
+ pl.data_case1_ver10
+ pl.data_case1_ver20
+ pl.data_case2_ver10
+ pl.data_case2_ver20
+
+ tp.data_case1_ver10
+ tp.data_case1_ver20
+ tp.data_case2_ver10
+ tp.data_case2_ver20
+
+with the following meaning:
+
+- pl.data_*
+
+  contain information about planets and the Sun in swift format
+
+  5           <-- number of massive bodies (Sun + 4 giant planets)
+  39.477...   <-- GM_Sun in au and yr units
+  0 0 0       <-- solar heliocentric position and velocity
+  0 0 0       
+
+  followed with information about Jupiter, Saturn, Uranus and Neptune
+  in the form
+
+  GM_planet  R_planet   <-- R=radius, again in au and yr units
+  x y z                 <-- heliocentric position in au
+  vx vy vz              <-- heliocentric velocity in au/yr
+
+- tp.data_*
+
+  contain basically heliocentric positions and velocities of
+  massless bodies (planetesimals/comets/... or how you want to call
+  them), each preceded with number of the body, i.e.
+
+  1
+  x y z        <-- heliocentric position in au of the first body
+  vx vy vz     <-- heliocentric velocity in au/yr of the first body
+  2
+  x y z        <-- heliocentric position in au of the second body
+  vx vy vz     <-- heliocentric velocity in au/yr of the second body
+  ...
+
+- aeii.data_*
+
+  provide solar system barycentric orbital elements for particles in
+  tp.data_* files (with the barycenter computed with pl.data_* files);
+  the columns are simply
+
+  a_bary (au)  e   I_1 (deg)   I_2 (deg)
+
+  only bodies with eccentricity e<1 are listed, I_1 is the inclination
+  wrt the Solar system Laplacian plane and I_2 is the inclination with
+  respect the galactic plane; a_bary is the barycentric semimajor axis.
+
+These last files might be handy when you'd like to check the orbital
+architecture of the particles. This is dominated in number by objects
+in the Oort cloud, but you may also see the scattering disk, resonant
+populations (in exterior resonances with Neptune) etc.
+
+The relative number of objects in different populations should be 
+correct (i.e. set by the assumed model), but the absolute number is 
+obviously tied to the fact that our simulations had initially 10^6 
+planetesimals in a trans-Neptunian massive disk in between ~23 au and 30 au. 
+We have then a rough calibration to sizes from implantantion simulations to
+heliocentrically closer populations like Jupiter Trojans or Centaurs.
+Very roughly, we believe there were ~ 6 x 10^9 planetesimals with
+D > 10 km in the disk as an example.
+
+----------------------------------------------------------------------
+
+Rem. just in case it is useful: we used a quadrupole approximation
+of the galactic tidal field in the heliocentric frame, e.g. eq. (1)
+in
+
+https://astro.troja.mff.cuni.cz/davok/papers/LPC_AJ2019.pdf
+
+with the parameters mentioned in the text. We assume a coordinate
+system in which the nodal line of the galactic plane is along the
+x-axis of the Solar system (Laplacian) plane; the direction to
+the galactic center was at the x-axis at the time origin of
+of simulations and the inclination of the galactic plane to the
+Solar sytem invariable plane is 60.2 deg. I may also send the
+subroutine if you want.
+
+In principle, the quadrupole approximation may not be accurate enough
+say beyond 50000 au helicentric distance, since higher multipoles
+may be important for high-accuracy orbital computations. Hopefully
+this is negligible when dealing with a statistical ensemble of comets
+(i.e., the whole cloud), but I actually never tested this issue.
+
