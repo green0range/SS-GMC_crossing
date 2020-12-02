@@ -376,7 +376,8 @@ class Oort_data:
         radius = sim.molecular_cloud.find_radius_of_cloud(0.05)
         # Sets up the crossing - calculates crossing time and plots a path.
         u = data.Unit_Conversion()
-        crossing = u.time_SI_to_yr(sim.molecular_cloud.get_crossing_time(radius)) + u.time_SI_to_yr(sim.molecular_cloud.get_approach_time())
+        # 2x approach times gives a lead out time as well as lead in
+        crossing = u.time_SI_to_yr(sim.molecular_cloud.get_crossing_time(radius)) + 2*u.time_SI_to_yr(sim.molecular_cloud.get_approach_time())
         if self.create_path_plot:
             sim.molecular_cloud.plot_path(int(crossing), z=0, scale=50, save_as=os.path.join(self.results_directory,
                                                                                         "path.png"))

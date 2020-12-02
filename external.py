@@ -26,7 +26,6 @@ class Molecular_cloud():
         self.velocity_dispersion = 840
         self.r_0 = np.array([-10, 0, 0])
         self.start_at_distance_to_gmc = start_at_distance_to_gmc
-
         # A plummer sphere is created at the centre of each condensation.
         self.condensations = [[0, 0, 0, 25000, 5]]
 
