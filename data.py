@@ -259,10 +259,10 @@ class Plotter:
         """
         ejected_times = []
         if start_index != 0:
-            start_index -= 1
+            start_index -= 1  # off set
         for particle in self.particles:
             for j in range(start_index, len(particle.get_t())):
-                if particle.get_e()[j] >= 1:
+                if particle.get_ejected(j):
                     if j == start_index:
                         break
                     ejected_times.append(particle.get_t()[j])
@@ -275,14 +275,16 @@ class Plotter:
         fig.add_subplot(ax)
         fig.set_size_inches(12.8*0.8, 9.2*0.8)
         ax.hist(ejected_times, bins=100)
+
         # This was just to draw a line a index 118 for the report
         # x = np.ones(100)*particle.get_t()[118]
-        x2 = np.ones(100) * 1266240.9270667
-        ylim = ax.get_ylim()
-        y = np.linspace(0, ylim[1], 100)
-        ax.set_ylim(ylim)
+        #x2 = np.ones(100) * 1266240.9270667
+        #ylim = ax.get_ylim()
+        #y = np.linspace(0, ylim[1], 100)
+        #ax.set_ylim(ylim)
         #ax.plot(x, y, color='black', linestyle="-")
-        ax.plot(x2, y, color='black', linestyle="--")
+        #ax.plot(x2, y, color='black', linestyle="--")
+
         ax.grid()
         start, end = ax.get_xlim()
         ax.xaxis.set_ticks(np.linspace(start, end, 5))
@@ -1052,7 +1054,7 @@ class Particle:
         if index == -1:
             index = len(self.get_e())-1
         try:
-            return self.get_e()[index] >= 1
+            return self.get_e()[index] >= 1 or self.get_a()[index] >= 5000000
         except IndexError:
             print("Warning, couldn't find particle data.")
             return True

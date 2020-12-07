@@ -32,6 +32,8 @@ class Molecular_cloud():
         self.crossing_time = None
         self._gmc_density_lookup_table = None
 
+        self.no_cloud = False  # no gmc.
+
         self.set_r_0(0)
 
         '''
@@ -77,6 +79,8 @@ class Molecular_cloud():
         """Gives a plummer sphere gravitational field centred around the molecular cloud.
 
         """
+        if self.no_cloud:
+            return np.array([0,0,0])
         G = 6.6743e-11  # gravitational constant
         g_x = 0  # = np.array([0., 0., 0.])
         g_y = 0
@@ -196,6 +200,8 @@ class Molecular_cloud():
 
     def set_molecular_cloud_parameters(self, ism_density, peak_density, vel_dispersion):
         self.ism_density = ism_density
+        if peak_density == 0:
+            self.no_cloud = True
         self.peak_density = peak_density
         self.velocity_dispersion = vel_dispersion
 
@@ -216,6 +222,8 @@ class Molecular_cloud():
         :param t:
         :return:
         """
+        if self.no_cloud:
+            return self.ism_density
         if t == -1:
             return 1.  # most basic test case
         elif t == -2:
@@ -302,6 +310,8 @@ class Molecular_cloud():
         The cases where t is -1 or -2 are for testing. t must not be negative unless it is these specific test
         values.
         """
+        if self.no_cloud:
+            return self.ism_density
         if t == -1:
             return 1.  # most basic test case
         elif t == -2:

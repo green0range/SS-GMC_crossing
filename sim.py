@@ -290,7 +290,7 @@ class Sim:
         '''Remove particles with a < a_min'''
         marked_for_removal = []
         for i in range(1, len(self.s.particles)):
-            if self.s.particles[i].a < min_a:
+            if self.s.particles[i].a < min_a or self.s.particles[i].a >= 5000000:
                 marked_for_removal.append(self.s.particles[i].hash)  # removing immediately would upset the indexing
             if self.s.particles[i].e > 1:
                 marked_for_removal.append(self.s.particles[i].hash)
@@ -474,7 +474,9 @@ class Sim:
         plt.show()
 
     def remove_ejected_particles(self):
-        """ Checks for ejected particles are removes them from the simulation
+        """ DON'T USE: NOT WORKING
+
+        Checks for ejected particles are removes them from the simulation
 
         param: force_remove: if True it will always remove a particle, even if not ejected. This is to test the removal
         process.
@@ -516,7 +518,13 @@ class Sim:
             self.s.ri_ias15.epsilon = 0  # this turns off the adaptive timestep
         particle_data = []
         particle_labels = []
-        self.s.status()
+        # self.s.status()
+        print("###")
+        print("REBOUND version: "+rebound.__version__)
+        print("Number of particles: "+str(len(self.s.particles)))
+        print("Selected integrator: "+self.s.integrator)
+        print("Current timestep: "+str(self.s.dt))
+        print("###")
         """The maximum number of files we can open at once is 1024, so here I split the file
         writing tasks in batches of 1000 files at a time. If n < max_batch size the function
         doesn't need to close the files until the end of the simulation and constantly adds to
@@ -571,9 +579,9 @@ class Sim:
         print(particle_data[0].get_label())
         for time in np.arange(0, self.integration_time, dt):
             self.s.integrate(time, exact_finish_time=0)
-            if time > (self.integration_time/num_ejec_checks) * (ejec_checks_done+1):
-                self.remove_ejected_particles()
-                ejec_checks_done += 1
+            #if time > (self.integration_time/num_ejec_checks) * (ejec_checks_done+1):
+            #    self.remove_ejected_particles()
+            #    ejec_checks_done += 1
             self.ps = self.s.particles
             files_to_open = self.n
             # print("files to open "+str(files_to_open))
@@ -618,5 +626,5 @@ class Sim:
         self.s.save(file)
 
 
-d = data.Size_Distribution(default_q="uniform")
-c = Sim.plot_size_distribution(1000, 0.1, 100, d)
+#d = data.Size_Distribution(default_q="uniform")
+#c = Sim.plot_size_distribution(1000, 0.1, 100, d)
